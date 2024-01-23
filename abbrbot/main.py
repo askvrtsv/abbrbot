@@ -17,7 +17,7 @@ class AbbrException(Exception):
     pass
 
 
-class ArgumentParserError(AbbrException):
+class InvalidArgument(AbbrException):
     pass
 
 
@@ -31,11 +31,11 @@ def parse_next_args(args: list) -> int:
     try:
         length = int(args.pop(0))
         if not (5 >= length >= 3):
-            raise ArgumentParserError("Размер должен быть от 3 до 5")
+            raise InvalidArgument("Размер должен быть от 3 до 5")
     except IndexError:
         length = 3
     except ValueError:
-        raise ArgumentParserError("Размер должен быть числом")
+        raise InvalidArgument("Размер должен быть числом")
     return length
 
 
@@ -45,7 +45,7 @@ async def next_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 
     try:
         length = parse_next_args(context.args or [])
-    except ArgumentParserError as exception:
+    except InvalidArgument as exception:
         await context.bot.send_message(
             chat_id=update.effective_chat.id,
             reply_to_message_id=update.message.id,
