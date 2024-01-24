@@ -1,4 +1,4 @@
-FROM python:3.11-buster as builder
+FROM python:3.12-bullseye as builder
 
 ENV \
 PIP_DISABLE_PIP_VERSION_CHECK="1" \
@@ -18,7 +18,7 @@ RUN \
 poetry install --only=main --no-interaction --no-ansi
 
 
-FROM python:3.11-slim-buster as runtime
+FROM python:3.12-slim-bullseye as runtime
 
 WORKDIR /opt/abbrbot
 
