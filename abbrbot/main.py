@@ -28,7 +28,7 @@ def load_template(template_path: pathlib.Path) -> str:
 
 
 def generate_abbr(length: int) -> str:
-    SYMBOLS = "АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЭЮЯ"
+    SYMBOLS = "АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЭЮЯ"
     return "".join(random.choice(SYMBOLS) for _ in range(length))
 
 
@@ -46,6 +46,7 @@ async def handle_callback_query(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> None:
     assert update.callback_query
+    assert update.effective_chat
 
     query = update.callback_query
     await query.answer()
@@ -56,6 +57,8 @@ async def handle_callback_query(
         case s if s.startswith("abbr-length"):
             length = int(s.split(":")[-1])
             await query.edit_message_text(generate_abbr(length))
+            assert query.message
+            await update.effective_chat.pin_message(query.message.id)
 
 
 async def new_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
